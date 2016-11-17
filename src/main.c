@@ -4,7 +4,7 @@
 int main()
 {
 
-    tree * myTree = initTree(4,2);
+    tree * myTree = initTree(6,2);
 
     void * dummy;
 
@@ -12,10 +12,12 @@ int main()
     loadDatum(myTree, dummy, 30, 40);
     loadDatum(myTree, dummy, 50, 60);
     loadDatum(myTree, dummy, 60, 70);
+    loadDatum(myTree, dummy, 70, 80);
+    loadDatum(myTree, dummy, 90, 100);
 
     buildTree(myTree);
 
-  printTree(myTree->root, 2);
+  //printTree(myTree->root, 2);
 
     int v[2]  = {50, 50};
     int dim = 0;

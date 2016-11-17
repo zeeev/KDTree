@@ -185,12 +185,11 @@ int recursiveAdd(tree * t,
       assert(mid != mid->left);
       assert(mid != mid->right);
 
-  //    printNode(mid, 2);
-  //    printNode(mid->left, 2);
-  //    printNode(mid->right,2);
+      printf("adding Now : \n");
+      printNode(mid, 2);
 
-      recursiveAdd(t, low,   kth-1, dim, mid->left);
-      recursiveAdd(t, kth+1,  high, dim, mid->right);
+      recursiveAdd(t, low,   kth-1, dim, mid);
+      recursiveAdd(t, kth+1,  high, dim, mid);
 
       return 0;
 }
