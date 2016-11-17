@@ -4,21 +4,32 @@
 int main()
 {
 
-    tree * myTree = initTree(9,2);
+    tree * myTree = initTree(4,2);
 
     void * dummy;
 
-    loadDatum(myTree, dummy, 150, 175);
-    loadDatum(myTree, dummy, 62, 65);
-    loadDatum(myTree, dummy, 20, 50);
-    loadDatum(myTree, dummy, 5,  6);
-    loadDatum(myTree, dummy, 52,  63);
-    loadDatum(myTree, dummy, 51,  52);
-    loadDatum(myTree, dummy, 75,  76);
-    loadDatum(myTree, dummy, 100, 120);
-    loadDatum(myTree, dummy, 125, 130);
+    loadDatum(myTree, dummy, 10, 20);
+    loadDatum(myTree, dummy, 30, 40);
+    loadDatum(myTree, dummy, 50, 60);
+    loadDatum(myTree, dummy, 60, 70);
 
     buildTree(myTree);
+
+  printTree(myTree->root, 2);
+
+    int v[2]  = {50, 50};
+    int dim = 0;
+
+    node * lt;
+
+  /*  if(lessThan(myTree->root, dim, v, 2, &lt) == 0){
+      printf("FATAL: no node less than ends\n");
+      return 1;
+    }
+*/
+
+    //printNode(myTree->root, 2);
+    //printNode(lt, 2);
 
     return 0;
 }

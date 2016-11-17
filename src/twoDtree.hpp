@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <assert.h>
 
 typedef struct node node;
 typedef struct tree tree;
@@ -33,6 +34,24 @@ struct tree{
   node * nodes;
   node * root;
 };
+
+int printNode(node * n, int nDim){
+
+  if(n == 0){
+    return 0;
+  }
+
+  int i = 0;
+  printf("Node %i :\n", n);
+  for(; i < nDim; i++){
+    printf(" dim: %i end: %i\n", i, n->ends[i]);
+  }
+  printf( " Node left child: %i\n", n->left);
+  printf( " Node right child: %i\n", n->right);
+  printf( " parent node: %i\n", n->parent);
+
+  return 1;
+}
 
 tree * initTree(int n, int dim)
 {
@@ -77,8 +96,9 @@ int loadDatum(tree * t,
     }
     va_end(args);
 
-    n->left  = 0;
-    n->right = 0;
+    n->left   = 0;
+    n->right  = 0;
+    n->parent = 0;
 
     t->nodes[t->index] = *n;
     t->index += 1;
@@ -99,21 +119,21 @@ node * partition(node * nodes,
     int high,
     int dim)
 {
+  printf("part ... l: %i h: %i\n", low, high);
+
+  if(low == high)
+    nodes[low];
+  if(low > high)
+    return 0;
 
   int kth = ((high - low) / 2) + low;
 
-  /* prevents a bad child node from being added */
-
-  /*if(low == high)
-    return 0;
-    */
 
   node * pivotNode = &nodes[kth];
   int left  = low;
   int right = high;
 
   while(left < right){
-
     while(nodes[left].ends[dim] < pivotNode->ends[dim])
       left++;
     while(nodes[right].ends[dim] > pivotNode->ends[dim])
@@ -129,16 +149,16 @@ node * partition(node * nodes,
     return partition(nodes, nodes[kth].ends[dim], high, dim);
 }
 
-int addNodes(tree * t,
+int recursiveAdd(tree * t,
     int low,
     int high,
     int dim,
     node * parent)
 {
-    if( low >= high)
+    if( low > high)
       return 0;
 
-      int kth = ((high - low) / 2) + low;
+      int kth = ((high - low) / 2) + low ;
 
       node * mid = partition(t->nodes, low, high, dim);
 
@@ -147,20 +167,30 @@ int addNodes(tree * t,
       if(dim == t->nDim){
         dim = 0;
       }
-
       if(parent == 0){
         t->root = mid;
       }
 
-      mid->parent = parent;
-
-printf("l: %i h: %i d: %i k: %i p: %i \n", low, high, dim, kth, parent);
+      if(mid == parent)
+        return 0;
 
       mid->left  = partition(t->nodes, low, kth-1, dim);
       mid->right = partition(t->nodes, kth+1, high, dim);
 
-      addNodes(t, low,   kth-1, dim, mid->left  );
-      addNodes(t, kth+1, high,  dim, mid->right );
+      mid->parent = parent;
+
+//  printf("add ... l: %i h: %i k: %i\n", low, high, kth);
+
+      assert(mid != parent);
+      assert(mid != mid->left);
+      assert(mid != mid->right);
+
+  //    printNode(mid, 2);
+  //    printNode(mid->left, 2);
+  //    printNode(mid->right,2);
+
+      recursiveAdd(t, low,   kth-1, dim, mid->left);
+      recursiveAdd(t, kth+1,  high, dim, mid->right);
 
       return 0;
 }
@@ -178,12 +208,57 @@ int buildTree(tree * t)
 
   int dim   = 0;
 
-  recursiveAdd(t, 0, t->n - 1, dim, 0);
+  recursiveAdd(t, 0, t->n -1, dim, 0);
 
   printf("Tree built\n");
 
   return 1;
 
+}
+
+int lessThan(node * current,
+  int dim,
+  int * ends,
+  int nDim,
+  node ** lastNode)
+{
+  if(current == 0){
+    return 0;
+  }
+  dim += 1;
+  if(dim == nDim){
+    dim = 1;
+  }
+
+  int lessThanBoth = 1;
+  int i = 0;
+  for(; i < nDim; i++){
+    if(current->ends[i] > ends[i]){
+      lessThanBoth = 0;
+      break;
+    }
+  }
+  if(lessThanBoth){
+    *lastNode = current;
+    return 1;
+  }
+  if(ends[dim-1] < current->ends[dim-1]){
+    return lessThan(current->left, dim, ends, nDim, lastNode);
+  }
+  else{
+    return lessThan(current->right, dim, ends, nDim, lastNode);
+  }
+}
+
+int printTree(node * n, int nDim){
+  if(n == 0){
+      return 0;
+  }
+  printNode(n, nDim);
+  printTree(n->right, 2);
+  printTree(n->left,  2);
+
+  return 0;
 }
 
 #endif /* twoDtree_hpp */
