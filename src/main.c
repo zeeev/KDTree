@@ -19,19 +19,17 @@ int main()
 
   //printTree(myTree->root, 2);
 
-    int v[2]  = {50, 50};
+    int v[2]  = {11, 21};
     int dim = 0;
 
     node * lt;
 
-  /*  if(lessThan(myTree->root, dim, v, 2, &lt) == 0){
+    if(lessThan(myTree->root, dim, v, 2, &lt) == 0){
       printf("FATAL: no node less than ends\n");
       return 1;
     }
-*/
 
-    //printNode(myTree->root, 2);
-    //printNode(lt, 2);
+    printNode(lt, 2);
 
     return 0;
 }

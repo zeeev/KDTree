@@ -119,7 +119,7 @@ node * partition(node * nodes,
     int high,
     int dim)
 {
-  printf("part ... l: %i h: %i\n", low, high);
+  //printf("part ... l: %i h: %i\n", low, high);
 
   if(low == high)
     nodes[low];
@@ -185,8 +185,8 @@ int recursiveAdd(tree * t,
       assert(mid != mid->left);
       assert(mid != mid->right);
 
-      printf("adding Now : \n");
-      printNode(mid, 2);
+    //  printf("adding Now : \n");
+    //  printNode(mid, 2);
 
       recursiveAdd(t, low,   kth-1, dim, mid);
       recursiveAdd(t, kth+1,  high, dim, mid);
@@ -209,7 +209,7 @@ int buildTree(tree * t)
 
   recursiveAdd(t, 0, t->n -1, dim, 0);
 
-  printf("Tree built\n");
+  assert(t->root != 0);
 
   return 1;
 
@@ -228,7 +228,6 @@ int lessThan(node * current,
   if(dim == nDim){
     dim = 1;
   }
-
   int lessThanBoth = 1;
   int i = 0;
   for(; i < nDim; i++){
@@ -237,16 +236,14 @@ int lessThan(node * current,
       break;
     }
   }
-  if(lessThanBoth){
+  if(lessThanBoth == 1){
     *lastNode = current;
     return 1;
   }
-  if(ends[dim-1] < current->ends[dim-1]){
-    return lessThan(current->left, dim, ends, nDim, lastNode);
+  if(lessThan(current->left, dim, ends,  nDim, lastNode)){
+    return 1;
   }
-  else{
-    return lessThan(current->right, dim, ends, nDim, lastNode);
-  }
+  return lessThan(current->right, dim, ends, nDim, lastNode);
 }
 
 int printTree(node * n, int nDim){
