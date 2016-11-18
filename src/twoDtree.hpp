@@ -121,8 +121,7 @@ node * partition(node * nodes,
 {
   //printf("part ... l: %i h: %i\n", low, high);
 
-  if(low == high)
-    nodes[low];
+
   if(low > high)
     return 0;
 
